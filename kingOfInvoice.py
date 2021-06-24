@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.add_argument('--window-size=250,1000')
 chrome_options.add_argument('--headless')
+chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36")
 # account_email = config('CMONEY_USERNAME')
 # account_password = config('CMONEY_PW')
 KING_TOKEN = config('KING_TOKEN')
@@ -28,34 +29,26 @@ try:
             EC.presence_of_element_located(
                 (By.ID, "rewardModal"))
         )
-    print("click closeBtn")
-    closeBtn = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "#rewardModal .close"))
-        )
-    closeBtn.click()
+    print("click closeBtn using JS")
+    driver.execute_script("$('#rewardModal').modal('toggle')")
 except:
-    print(sys.exc_info())
     print("reward modal doesn't show")
+    print(sys.exc_info())
 
 try:
-    print("checking sign in modal ...")
+    print("checking  打卡成功Modal ...")
     checkInModal = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located(
                 (By.ID, "checkInModal"))
         )
-    print("click closeBtn")
-    closeBtn = WebDriverWait(driver, 5).until(
-            EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "#checkInModal .close"))
-        )
-    closeBtn.click()
+    print("打卡成功")
+    print("click closeBtn using JS")
+    driver.execute_script("$('#checkInModal').modal('toggle')")
 except:
     print(sys.exc_info())
-    print("sign in modal doesn't show")
 
 try:
-    print("click regBtn")
+    print("click 報名按鈕")
     regBtn = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable(
                 (By.CSS_SELECTOR, "#sleepEarlyBtn.btn.btn-yellow-filled"))
@@ -69,9 +62,8 @@ try:
         )
     OKBTN.click()
 except:
-    print(sys.exc_info())
-
-time.sleep(10)
+    btn_text = driver.execute_script("return $('#sleepEarlyBtn').text();")
+    print(btn_text)
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
