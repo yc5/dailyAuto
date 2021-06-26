@@ -24,16 +24,18 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.get("https://www.money.com.tw/sleepearly?access_token="+KING_TOKEN+"&os=android")
 
 try:
-    print("checking reward modal ...")
+    print("checking 獎勵Modal ...")
     checkInModal = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located(
                 (By.ID, "rewardModal"))
         )
     print("click closeBtn using JS")
-    driver.execute_script("$('#rewardModal').modal('toggle')")
+    driver.execute_script("$('#rewardModal').modal('hide')")
 except:
-    print("reward modal doesn't show")
+    print("獎勵Modal doesn't show")
     print(sys.exc_info())
+finally:
+    time.sleep(5)
 
 try:
     print("checking  打卡成功Modal ...")
@@ -43,9 +45,12 @@ try:
         )
     print("打卡成功")
     print("click closeBtn using JS")
-    driver.execute_script("$('#checkInModal').modal('toggle')")
+    driver.execute_script("$('#checkInModal').modal('hide')")
 except:
+    print("打卡成功Modal doesn't show")
     print(sys.exc_info())
+finally:
+    time.sleep(5)
 
 try:
     print("click 報名按鈕")
@@ -62,8 +67,13 @@ try:
         )
     OKBTN.click()
 except:
-    btn_text = driver.execute_script("return $('#sleepEarlyBtn').text();")
-    print(btn_text)
+    print("button not clickable")
+    print(sys.exc_info())
+finally:
+    time.sleep(5)
+
+btn_text = driver.execute_script("return $('#sleepEarlyBtn').text();")
+print(btn_text)
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
