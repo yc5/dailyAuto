@@ -9,12 +9,12 @@ from selenium.webdriver.chrome.options import Options
 
 chrome_options = Options()
 chrome_options.add_argument('--window-size=1280,720')
-# chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')
 chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36")
 account_email = config('YAHOO_EMAIL')
 account_password = config('YAHOO_PW')
-YAHOO_T = config('YAHOO_T')
-YAHOO_Y = config('YAHOO_Y')
+YAHOO_T = sys.argv[1]
+YAHOO_Y = sys.argv[2]
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
