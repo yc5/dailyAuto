@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 
 chrome_options = Options()
 chrome_options.add_argument('--window-size=1280,720')
-chrome_options.add_argument('--headless')
+# chrome_options.add_argument('--headless')
 chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36")
 account_email = config('YAHOO_EMAIL')
 account_password = config('YAHOO_PW')
@@ -86,11 +86,7 @@ for i in range(5):
     time.sleep(5)
 
 print("current_url:", driver.current_url)
-print("===")
 # print(driver.page_source)
-t = time.localtime()
-current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
-print("end:", current_time)
 
 time.sleep(5)
 try:
@@ -107,17 +103,21 @@ try:
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, ".trendingNow a"))
         )
-    print(txt.get_attribute('textContent').strip())
+    print("click", txt.get_attribute('textContent').strip(), "...")
     txt.click()
     time.sleep(5)
     txt = WebDriverWait(driver, 5).until(
             EC.presence_of_element_located(
                 (By.CSS_SELECTOR, ".trendingNow a"))
         )
-    print(txt.get_attribute('textContent').strip())
+    print("click", txt.get_attribute('textContent').strip(), "...")
     txt.click()
     time.sleep(5)
 except:
     print(sys.exc_info())
 
+
+t = time.localtime()
+current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
+print("end:", current_time)
 driver.quit()
