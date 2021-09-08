@@ -1,5 +1,6 @@
 import sys
 import time
+import requests
 from decouple import Config, config
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -14,6 +15,12 @@ chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64
 # account_email = config('CMONEY_USERNAME')
 # account_password = config('CMONEY_PW')
 KING_TOKEN = config('KING_TOKEN')
+
+# line notify
+token = config('KING_LINE_NOTIFY_TOKEN')
+url = 'https://notify-api.line.me/api/notify'
+headers = {'Authorization': 'Bearer ' + token}
+msg = ''
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
@@ -44,6 +51,7 @@ try:
                 (By.ID, "checkInModal"))
         )
     print("打卡成功")
+    msg += "打卡成功"
     print("click closeBtn using JS")
     driver.execute_script("$('#checkInModal').modal('hide')")
 except:
@@ -54,6 +62,7 @@ finally:
 
 try:
     print("click 報名按鈕")
+    msg += "\nclick 報名按鈕"
     regBtn = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable(
                 (By.CSS_SELECTOR, "#sleepEarlyBtn.btn.btn-yellow-filled"))
@@ -61,6 +70,7 @@ try:
     regBtn.click()
 
     print("click OKBTN")
+    msg += "\nclick OKBTN"
     OKBTN = WebDriverWait(driver, 5).until(
             EC.element_to_be_clickable(
                 (By.CSS_SELECTOR, "#check_in_form3 #sleepEarlyBtn.OKBTN"))
@@ -68,15 +78,21 @@ try:
     OKBTN.click()
 except:
     print("button not clickable")
+    msg += "\nbutton not clickable"
     print(sys.exc_info())
 finally:
     time.sleep(5)
 
 btn_text = driver.execute_script("return $('#sleepEarlyBtn').text();")
 print(btn_text)
+msg += "\n" + btn_text
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
 print("end:", current_time)
+
+# line notify
+data = {'message' : msg}
+r = requests.post(url, data = data, headers = headers)
 
 driver.quit()
