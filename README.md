@@ -17,7 +17,7 @@ KING_TOKEN="TOKEN_32"
 ## Setup ChromeDriver
 
 1. Download it from https://chromedriver.chromium.org/ .
-2. Include it in PATH.
+2. `sudo unzip chromedriver_linux64.zip -d /usr/local/bin`
 
 
 ## Command Line Arguments
