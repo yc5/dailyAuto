@@ -13,3 +13,13 @@ YAHOO_Y="TOKEN_V_L_P_IZ_R_INTL"
 
 KING_TOKEN="TOKEN_32"
 ```
+
+## Setup ChromeDriver
+
+1. Download it from https://chromedriver.chromium.org/ .
+2. Include it in PATH.
+
+
+## Command Line Arguments
+
+```python yahoo.py YAHOO_T YAHOO_Y```
