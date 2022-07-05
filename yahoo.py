@@ -1,6 +1,7 @@
 import sys
 import time
 from decouple import config
+import requests
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -15,6 +16,12 @@ account_email = config('YAHOO_EMAIL')
 account_password = config('YAHOO_PW')
 YAHOO_T = sys.argv[1]
 YAHOO_Y = sys.argv[2]
+
+# line notify
+token = config('KING_LINE_NOTIFY_TOKEN')
+url = 'https://notify-api.line.me/api/notify'
+headers = {'Authorization': 'Bearer ' + token}
+msg = ''
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
@@ -42,6 +49,7 @@ try:
                 (By.ID, "ybarAccountMenuOpener"))
         )
     print("Hello,", personal_info.get_attribute('textContent').strip())
+    msg += "Yahoo! " + personal_info.get_attribute('textContent').strip()
 
     # btn = WebDriverWait(driver, 5).until(
     #         EC.presence_of_element_located(
@@ -104,6 +112,7 @@ try:
                 (By.CSS_SELECTOR, ".trendingNow a"))
         )
     print("click", txt.get_attribute('textContent').strip(), "...")
+    msg += "\nClick " + txt.get_attribute('textContent').strip()
     txt.click()
     time.sleep(5)
     txt = WebDriverWait(driver, 5).until(
@@ -111,11 +120,16 @@ try:
                 (By.CSS_SELECTOR, ".trendingNow a"))
         )
     print("click", txt.get_attribute('textContent').strip(), "...")
+    msg += "\nClick " + txt.get_attribute('textContent').strip()
     txt.click()
     time.sleep(5)
 except:
     print(sys.exc_info())
 
+
+# line notify
+data = {'message' : msg}
+r = requests.post(url, data = data, headers = headers)
 
 t = time.localtime()
 current_time = time.strftime("%Y-%m-%d %H:%M:%S", t)
