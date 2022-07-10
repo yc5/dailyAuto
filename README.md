@@ -1,5 +1,15 @@
 # dailyAuto
 
+Automate several daily routine tasks with Python Selenium.
+
+使用 Python Selenium 技術，自動化完成每日重複性工作。
+
+目前支援項目包含：
+- Yahoo!奇摩好朋友計畫：電子信箱每日簽到、點擊十大熱門搜尋、閱讀新聞、購物中心 找阿虎任務
+- 發票集點王每日打卡簽到
+- Cmoney每日登入理財寶購物金回饋
+
+
 ## Setting up .env file
 
 ```
@@ -29,4 +39,4 @@ KING_TOKEN="TOKEN_32"
 
 ## Command Line Arguments
 
-```python yahoo.py YAHOO_T YAHOO_Y```
+```python yahoo.py COOKIE_YAHOO_T COOKIE_YAHOO_Y```
