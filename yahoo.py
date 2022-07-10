@@ -90,7 +90,7 @@ except:
 
 # click eight news
 chrome_options = Options()
-chrome_options.add_argument("--window-size=720,1280")
+chrome_options.add_argument("--window-size=600,1000")
 chrome_options.add_argument("--headless")
 chrome_options.add_argument(
     "user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/103.0.5060.63 Mobile/15E148 Safari/604.1"
@@ -118,23 +118,38 @@ for x in links_news:
 
 for x in range(8 - current_execution_times):
     driver.get(list_links_news[x])
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
+    driver.execute_script("window.scrollTo(0, 2000);")
+    time.sleep(2)
     try:
         btn_skip = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, ".skip-button"))
         )
         btn_skip.click()
     except:
-        print(x, "there is no skip button")
+        print(x, "Pass: there is no skip button")
 
+    driver.execute_script("window.scrollTo(0, 2000);")
+    time.sleep(1)
+    driver.execute_script(
+        "window.scrollTo(0, document.querySelector('#postArticle').offsetTop);"
+    )
     btn = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, ".challenge-target > button"))
     )
-    driver.execute_script(
-        "window.scrollTo(0, document.querySelector('[role=article]').offsetHeight);"
-    )
     btn.click()
-    time.sleep(5)
+    time.sleep(2)
+
+# Shopping-start
+driver.get("https://tw.buy.yahoo.com/rushbuy")
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+try:
+    btn_checkin = WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[class^=CheckInButton]"))
+    )
+    btn_checkin.click()
+except:
+    print("there is no btn_checkin")
 
 # line notify
 data = {"message": msg}
