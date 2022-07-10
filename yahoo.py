@@ -87,6 +87,8 @@ try:
     time.sleep(5)
 except:
     print(sys.exc_info())
+finally:
+    driver.quit()
 
 # click eight news
 chrome_options = Options()
@@ -105,7 +107,7 @@ url_challenges_info_api = "https://tw.yahoo.com/_td-hl/api/resource/LoyaltyServi
 current_execution_times = driver.execute_async_script(
     "var callback = arguments[arguments.length-1]; return fetch('"
     + url_challenges_info_api
-    + "').then(e=>e.json()).then(json=>json.data.challenges[1].currentExecutionTimes).then(callback).catch(callback);"
+    + "').then((e) => e.json()) .then((json) => { let currentExecutionTimes = 0; json.data.challenges.forEach((e) => { if (e.defaultActionType == 'read_article') currentExecutionTimes = e.currentExecutionTimes; }); return currentExecutionTimes; }) .then(callback) .catch(callback);"
 )
 
 driver.get("https://tw.news.yahoo.com")
