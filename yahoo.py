@@ -11,6 +11,7 @@ from selenium.webdriver.chrome.options import Options
 chrome_options = Options()
 chrome_options.add_argument("--window-size=1280,720")
 chrome_options.add_argument("--headless")
+chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
 chrome_options.add_argument(
     "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
 )
@@ -94,6 +95,7 @@ finally:
 chrome_options = Options()
 chrome_options.add_argument("--window-size=600,1000")
 chrome_options.add_argument("--headless")
+chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
 chrome_options.add_argument(
     "user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 15_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) CriOS/103.0.5060.63 Mobile/15E148 Safari/604.1"
 )
@@ -102,13 +104,21 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.get("https://tw.yahoo.com/member")
 driver.add_cookie({"name": "T", "value": YAHOO_T, "domain": "yahoo.com"})
 driver.add_cookie({"name": "Y", "value": YAHOO_Y, "domain": "yahoo.com"})
+driver.get("https://tw.yahoo.com/member")
 
-url_challenges_info_api = "https://tw.yahoo.com/_td-hl/api/resource/LoyaltyService.challenges?bkt=tw-fp-mweb-tts3-part2-bucket&contentType=null&device=smartphone&ecma=default&feature=always%2CnewBreakingNews%2CadFeedback%2CoathPlayer%2CuseDefaultNavigation%2CuseNTKCanonical%2Ctts3&intl=tw&lang=zh-Hant-TW&page=membercenter&pageType=undefined&partner=none&period=day&prid=988irr5hcl6bf&region=TW&site=fp&subCategory=null&tz=Asia%2FTaipei&ver=3.2.4345&returnMeta=true"
-current_execution_times = driver.execute_async_script(
-    "var callback = arguments[arguments.length-1]; return fetch('"
-    + url_challenges_info_api
-    + "').then((e) => e.json()) .then((json) => { let currentExecutionTimes = 0; json.data.challenges.forEach((e) => { if (e.defaultActionType == 'read_article') currentExecutionTimes = e.currentExecutionTimes; }); return currentExecutionTimes; }) .then(callback) .catch(callback);"
+# api method
+# url_challenges_info_api = "https://tw.yahoo.com/_td-hl/api/resource/LoyaltyService.challenges?bkt=tw-fp-mweb-tts3-part2-bucket&contentType=null&device=smartphone&ecma=default&feature=always%2CnewBreakingNews%2CadFeedback%2CoathPlayer%2CuseDefaultNavigation%2CuseNTKCanonical%2Ctts3&intl=tw&lang=zh-Hant-TW&page=membercenter&pageType=undefined&partner=none&period=day&prid=988irr5hcl6bf&region=TW&site=fp&subCategory=null&tz=Asia%2FTaipei&ver=3.2.4345&returnMeta=true"
+# current_execution_times = driver.execute_async_script(
+#     "var callback = arguments[arguments.length-1]; return fetch('"
+#     + url_challenges_info_api
+#     + "').then((e) => e.json()) .then((json) => { let currentExecutionTimes = 0; json.data.challenges.forEach((e) => { if (e.defaultActionType == 'read_article') currentExecutionTimes = e.currentExecutionTimes; }); return currentExecutionTimes; }) .then(callback) .catch(callback);"
+# )
+
+current_execution_times = WebDriverWait(driver, 5).until(
+    EC.presence_of_element_located((By.CSS_SELECTOR, ".trophy-task-progress"))
 )
+current_execution_times = int(current_execution_times.get_attribute("data-percent")[0])
+
 print("current_execution_times", current_execution_times)
 msg += "\ncurrent_execution_times " + str(current_execution_times)
 
@@ -144,13 +154,20 @@ for x in range(8 - current_execution_times):
 
     driver.execute_script("window.scrollTo(0, 2000);")
     time.sleep(1)
-    driver.execute_script(
-        "window.scrollTo(0, document.querySelector('#postArticle').offsetTop);"
-    )
-    btn = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, ".challenge-target > button"))
-    )
-    btn.click()
+
+    try:
+        driver.execute_script(
+            "window.scrollTo(0, document.querySelector('#postArticle').offsetTop);"
+        )
+        btn = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, ".challenge-target > button")
+            )
+        )
+        btn.click()
+    except:
+        print("no news button")
+        msg += "\nno news button"
     time.sleep(2)
 
 # Shopping-start
