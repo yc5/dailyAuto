@@ -109,6 +109,8 @@ current_execution_times = driver.execute_async_script(
     + url_challenges_info_api
     + "').then((e) => e.json()) .then((json) => { let currentExecutionTimes = 0; json.data.challenges.forEach((e) => { if (e.defaultActionType == 'read_article') currentExecutionTimes = e.currentExecutionTimes; }); return currentExecutionTimes; }) .then(callback) .catch(callback);"
 )
+print("current_execution_times", current_execution_times)
+msg += "\ncurrent_execution_times " + str(current_execution_times)
 
 driver.get("https://tw.news.yahoo.com")
 links_news = WebDriverWait(driver, 5).until(
