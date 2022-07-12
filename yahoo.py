@@ -156,13 +156,18 @@ for x in range(8 - current_execution_times):
 # Shopping-start
 driver.get("https://tw.buy.yahoo.com/rushbuy")
 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+time.sleep(2)
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 try:
     btn_checkin = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[class^=CheckInButton]"))
     )
     btn_checkin.click()
+    print("clicked btn_checkin")
+    msg += "\nclicked btn_checkin"
 except:
     print("there is no btn_checkin")
+    msg += "\nthere is no btn_checkin"
 
 # line notify
 data = {"message": msg}
