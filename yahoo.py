@@ -75,7 +75,7 @@ try:
         EC.presence_of_element_located((By.CSS_SELECTOR, ".trendingNow a"))
     )
     print("click", txt.get_attribute("textContent").strip(), "...")
-    msg += "\nClick " + txt.get_attribute("textContent").strip()
+    msg += "\nclick " + txt.get_attribute("textContent").strip()
     txt.click()
     time.sleep(5)
     txt = WebDriverWait(driver, 5).until(
@@ -123,6 +123,14 @@ for x in links_news:
 for x in range(8 - current_execution_times):
     driver.get(list_links_news[x])
     time.sleep(2)
+
+    news_title = WebDriverWait(driver, 5).until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "header > h1"))
+    )
+    news_title = news_title.get_attribute("textContent").strip()
+    print("get", x + 1, news_title)
+    msg += "\nget " + str(x + 1) + " " + news_title
+
     driver.execute_script("window.scrollTo(0, 2000);")
     time.sleep(2)
     try:
@@ -130,8 +138,9 @@ for x in range(8 - current_execution_times):
             EC.presence_of_element_located((By.CSS_SELECTOR, ".skip-button"))
         )
         btn_skip.click()
+        print("click", x + 1, "skip button")
     except:
-        print(x, "Pass: there is no skip button")
+        pass
 
     driver.execute_script("window.scrollTo(0, 2000);")
     time.sleep(1)
